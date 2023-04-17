@@ -29,6 +29,10 @@ export const createContext = async ({
       user = await User.findById((decoded as jwt.JwtPayload).id);
     } catch (error) {
       console.error(error);
+
+      res.clearCookie('token');
+      
+      res.redirect('/login');
     }
   }
 

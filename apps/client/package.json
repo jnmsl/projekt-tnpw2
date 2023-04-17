@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
+    "@heroicons/react": "^2.0.17",
     "@hookform/resolvers": "^3.0.1",
     "@mantine/core": "^6.0.7",
     "@mantine/form": "^6.0.7",
@@ -27,10 +28,10 @@
     "@trpc/client": "^10.20.0",
     "@trpc/react-query": "^10.20.0",
     "@trpc/server": "^10.20.0",
-    "cross-fetch": "^3.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
+    "react-router-dom": "^6.10.0",
     "superjson": "^1.12.2",
     "ui": "workspace:*",
     "zod": "^3.21.4"

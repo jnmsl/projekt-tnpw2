@@ -21,19 +21,12 @@ export function LoginForm() {
   });
 
   const loginUser = trpc.user.login.useMutation();
-  const [authToken, setAuthToken] = React.useState<string | null>(null);
-
-  useEffect(() => {
-    if (authToken) {
-      document.cookie = `token=${authToken}; path=/`;
-      console.log("User logged in successfully.");
-    }
-  }, [authToken]);
 
   const onSubmit = (data: LoginFormFields) => {
     loginUser.mutate(data, {
       onSuccess: (token) => {
-        setAuthToken(token);
+        console.log("User logged in successfully.");
+        // Redirect the user to another page or update the UI to reflect the logged-in state.
       },
       onError: (error) => {
         console.log(error.message);

@@ -47,22 +47,33 @@ const login = publicProcedure
       }
     );
 
-    ctx.res.cookie('token', token);
+    ctx.res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      secure: process.env.NODE_ENV === 'production',
+    });
+
     return token;
   });
 
-const getCurrentUser = publicProcedure.query(async ({ ctx }) => {
-  // check if user is authenticated by toke in cookie
-  if (!ctx.user) throw new Error('Not authenticated');
+const logout = publicProcedure.mutation(async ({ ctx }) => {
+  ctx.res.clearCookie('token');
+  return 'Logged out successfully.';
+});
 
-  return {
-    id: ctx.user._id,
-    username: ctx.user.username,
-  };
+const getCurrentUser = publicProcedure.query(async ({ ctx }) => {
+  // if logged in return a user if not return null
+  if (ctx.user) {
+    return ctx.user;
+  } else {
+    return null;
+  }
 });
 
 export const usersRouter = router({
   register,
   login,
+  logout,
   getCurrentUser,
 });
