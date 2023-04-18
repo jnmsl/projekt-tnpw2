@@ -70,7 +70,7 @@ export function Wrapper({ children }: WrapperProps) {
 
   return (
     <AppShell
-      className='bg-gray-100 px-32'
+      className='bg-gray-100 xl:px-32'
       navbarOffsetBreakpoint='sm'
       asideOffsetBreakpoint='sm'
       navbar={

@@ -30,19 +30,22 @@ export function AppContent() {
 
   return (
     <Wrapper>
-      <h1 className='text-4xl font-bold text-center py-5'>Home</h1>
       {/* Render a loading component or an empty fragment while the data is being fetched */}
       {currentUser.isLoading ? (
-        <></> // Replace this with a loading component if desired
+        <div>Loading...</div>
       ) : (
         <>
+          {isLoggedIn && (
+            <h1 className='text-4xl font-bold text-center py-5'>Home</h1>
+          )}
           {isLoggedIn && <PostForm />}
           {isLoggedIn && <PostsList />}
           {!isLoggedIn && (
             <>
-              <p className='text-center'>
-                You are not logged in. Please login or register to post.
-              </p>
+              <h1 className='text-4xl font-bold text-center py-5'>
+                You are not logged in
+              </h1>
+              <p className='text-center'>Please login or register to post.</p>
               <br />
               <div className='text-center'>
                 <Button
