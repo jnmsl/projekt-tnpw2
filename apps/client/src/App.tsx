@@ -4,7 +4,7 @@ import { trpc } from './trpc';
 import { httpBatchLink } from '@trpc/client';
 import { MantineProvider, createEmotionCache } from '@mantine/core';
 
-function App({ children }: React.PropsWithChildren<{}>) {
+function App({ children }: React.PropsWithChildren<unknown>) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({

@@ -11,6 +11,7 @@ import {
   Grid,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const loginSchema = z.object({
   username: z.string().nonempty('Username is required'),
@@ -22,6 +23,7 @@ type LoginFormFields = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const navigate = useNavigate();
   const loginUser = trpc.user.login.useMutation();
+  const [serverError, setServerError] = useState('');
 
   const onSubmit = async (data: LoginFormFields) => {
     try {
@@ -31,8 +33,10 @@ export function LoginForm() {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
+        setServerError(error.message);
       } else {
         console.log('An unknown error occurred.');
+        setServerError('An unknown error occurred.');
       }
     }
   };
@@ -67,6 +71,11 @@ export function LoginForm() {
             <Button variant='filled' size='sm' type='submit'>
               Log in
             </Button>
+            {serverError && (
+              <div style={{ color: 'red', marginTop: '8px' }}>
+                {serverError}
+              </div>
+            )}
           </Col>
         </Grid>
       </form>

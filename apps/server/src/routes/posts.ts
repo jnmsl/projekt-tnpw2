@@ -2,18 +2,21 @@ import { publicProcedure, router } from '../trpc';
 import Post from '../models/post';
 import { z } from 'zod';
 
-const getPosts = publicProcedure.query(async () => {
+const postInputSchema = z.object({
+  title: z.string().min(1).max(50),
+  content: z.string().min(1).max(250),
+});
+
+const getPosts = publicProcedure.query(async ({ ctx }) => {
+  // check if user is authenticated
+  if (!ctx.user) throw new Error('Not authenticated');
+
   const posts = await Post.find().populate('user');
   return posts;
 });
 
 const createPosts = publicProcedure
-  .input(
-    z.object({
-      title: z.string(),
-      content: z.string(),
-    })
-  )
+  .input(postInputSchema)
   .mutation(async ({ input: { title, content }, ctx }) => {
     console.log('user: ' + ctx.user);
     // check if user is authenticated

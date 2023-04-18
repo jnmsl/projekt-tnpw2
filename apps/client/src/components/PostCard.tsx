@@ -1,6 +1,5 @@
 import { trpc } from '../trpc';
-import { Button } from '@mantine/core';
-import { Text } from '@mantine/core';
+import { Text, Paper, Button } from '@mantine/core';
 
 export function PostCard({ post }: any) {
   const deletePost = trpc.post.delete.useMutation();
@@ -27,12 +26,10 @@ export function PostCard({ post }: any) {
     currentUser.data && post.user._id === currentUser.data._id;
 
   return (
-    <div className='p-2 mb-2 flex'>
-      <div>
-        <h1 className='font-bold text-xl'>{post.title}</h1>
-        <Text fz='sm'>Posted by: {post.user.username}</Text>
-        <p>{post.content}</p>
-      </div>
+    <Paper shadow='xs' p='md' className='p-2 mb-2 flex'>
+      <Text className='font-bold text-xl'>{post.title}</Text>
+      <Text fz='sm'>Posted by: {post.user.username}</Text>
+      <Text>{post.content}</Text>
 
       {/* Render the delete button only if the current user is the post's creator */}
       {isPostCreator && (
@@ -40,11 +37,11 @@ export function PostCard({ post }: any) {
           onClick={() => onDeletePost()}
           variant='outline'
           color='red'
-          className='ml-auto'
+          className='ml-auto mt-2'
         >
           {deletePost.isLoading ? 'Loading...' : 'Delete'}
         </Button>
       )}
-    </div>
+    </Paper>
   );
 }

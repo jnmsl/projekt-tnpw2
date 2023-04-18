@@ -3,18 +3,20 @@ import User from '../models/user';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_SECRET =
+  process.env.JWT_SECRET || 'secret';
 
 const registerInput = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(3).max(30),
+  password: z.string().min(8).max(100),
 });
 
 const loginInput = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(3).max(30),
+  password: z.string().min(8).max(100),
 });
 
 const register = publicProcedure
@@ -35,7 +37,6 @@ const login = publicProcedure
     const user = await User.findOne({ username });
     if (!user) throw new Error('Invalid username or password.');
 
-    // Replace user.password with user.hashedPassword
     const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!passwordMatch) throw new Error('Invalid username or password.');
 

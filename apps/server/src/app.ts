@@ -6,6 +6,10 @@ import { router, createContext } from './trpc';
 import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import helmet from 'helmet';
+
+dotenv.config();
 
 const app = express();
 
@@ -14,12 +18,14 @@ const appRouter = router({
   user: usersRouter,
 });
 
-app.use(
-  cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  })
-);
+app.use(helmet());
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
