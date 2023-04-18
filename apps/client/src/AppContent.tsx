@@ -1,7 +1,7 @@
 import { PostForm } from './components/PostForm';
 import { PostsList } from './components/PostsList';
 import { Wrapper } from './components/Wrapper';
-import { trpc } from './trpc'; // Import trpc
+import { trpc } from './trpc';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mantine/core';
 

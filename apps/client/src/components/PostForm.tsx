@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { trpc } from '../trpc';
-import { TextInput, Textarea, Paper, Button } from '@mantine/core';
+import { TextInput, Textarea, Button } from '@mantine/core';
 
 interface IFormInputs {
   title: string;

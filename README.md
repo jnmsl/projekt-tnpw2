@@ -8,6 +8,8 @@ Run the following commands:
 pnpm install
 ```
 
+Create .env with MONGODB_URI in apps/server folder.
+
 ```sh
 pnpm run dev
 ```
