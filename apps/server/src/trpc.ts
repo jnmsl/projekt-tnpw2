@@ -2,7 +2,6 @@ import { inferAsyncReturnType, initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import User from './models/user';
 import jwt from 'jsonwebtoken';
-import { parse as parseCookie } from 'cookie';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
@@ -22,7 +21,6 @@ export const createContext = async ({
 
   console.log('Parsed token:', token);
 
-
   if (token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
@@ -31,11 +29,10 @@ export const createContext = async ({
       console.error(error);
 
       res.clearCookie('token');
-      
+
       res.redirect('/login');
     }
   }
-
 
   return { req, res, user };
 };

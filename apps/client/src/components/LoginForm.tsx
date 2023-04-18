@@ -1,17 +1,42 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { trpc } from "../trpc";
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { trpc } from '../trpc';
+import {
+  Paper,
+  Col,
+  TextInput,
+  PasswordInput,
+  Button,
+  Grid,
+} from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().nonempty('Username is required'),
+  password: z.string().nonempty('Password is required'),
 });
 
 type LoginFormFields = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const navigate = useNavigate();
+  const loginUser = trpc.user.login.useMutation();
+
+  const onSubmit = async (data: LoginFormFields) => {
+    try {
+      await loginUser.mutateAsync(data);
+      console.log('User logged in successfully.');
+      navigate('/');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log('An unknown error occurred.');
+      }
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -20,41 +45,31 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const loginUser = trpc.user.login.useMutation();
-
-  const onSubmit = (data: LoginFormFields) => {
-    loginUser.mutate(data, {
-      onSuccess: (token) => {
-        console.log("User logged in successfully.");
-        // Redirect the user to another page or update the UI to reflect the logged-in state.
-      },
-      onError: (error) => {
-        console.log(error.message);
-      },
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-zinc-900 p-10 rounded-md">
-      <input
-        type="text"
-        placeholder="Username"
-        {...register("username")}
-        className="bg-neutral-800 px-3 py-2 block w-full rounded-md mb-3"
-      />
-      {errors.username && <p className="text-red-600">{errors.username.message}</p>}
-
-      <input
-        type="password"
-        placeholder="Password"
-        {...register("password")}
-        className="bg-neutral-800 px-3 py-2 block w-full rounded-md mb-3"
-      />
-      {errors.password && <p className="text-red-600">{errors.password.message}</p>}
-
-      <button className="bg-zinc-500 px-3 py-2 rounded-md text-white">
-        Log in
-      </button>
-    </form>
+    <Paper p='md' shadow='xs'>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid gutter='md'>
+          <Col span={12}>
+            <TextInput
+              label='Username'
+              error={errors.username?.message}
+              {...register('username')}
+            />
+          </Col>
+          <Col span={12}>
+            <PasswordInput
+              label='Password'
+              error={errors.password?.message}
+              {...register('password')}
+            />
+          </Col>
+          <Col span={12}>
+            <Button variant='filled' size='sm' type='submit'>
+              Log in
+            </Button>
+          </Col>
+        </Grid>
+      </form>
+    </Paper>
   );
 }

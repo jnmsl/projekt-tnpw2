@@ -71,9 +71,15 @@ const getCurrentUser = publicProcedure.query(async ({ ctx }) => {
   }
 });
 
+const getUsers = publicProcedure.query(async () => {
+  const users = await User.find();
+  return users;
+});
+
 export const usersRouter = router({
   register,
   login,
   logout,
   getCurrentUser,
+  getUsers,
 });

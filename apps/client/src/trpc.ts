@@ -1,9 +1,9 @@
-import { createTRPCReact } from "@trpc/react-query";
-import type { AppRouter } from "../../server/src/app";
+import { createTRPCReact } from '@trpc/react-query';
+import type { AppRouter } from '../../server/src/app';
 
-export const trpc = createTRPCReact<AppRouter>()
+export const trpc = createTRPCReact<AppRouter>();
 
-// export const trpcClient = trpc.createClient({    
+// export const trpcClient = trpc.createClient({
 //   links: [
 //     httpBatchLink({
 //       url: 'http://localhost:3000/trpc',

@@ -12,10 +12,16 @@ import {
   Button,
 } from '@mantine/core';
 import { trpc } from '../trpc';
+import { useQueryClient } from '@tanstack/react-query';
+import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/solid';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserList } from './UserList';
 
 export function CurrentUser() {
   const { data, error, isLoading } = trpc.user.getCurrentUser.useQuery();
   const logout = trpc.user.logout.useMutation();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -32,9 +38,22 @@ export function CurrentUser() {
 
   if (data) {
     return (
-      <div>
-        <p>Username: {data.username}</p>
-        <Button onClick={() => logout.mutate()}>Logout</Button>
+      <div className='inline-flex space-x-4 items-center'>
+        <p>User: {data.username}</p>
+        <Button
+          variant='filled'
+          size='md'
+          onClick={() =>
+            logout.mutate(undefined, {
+              onSuccess: () => {
+                queryClient.clear();
+                navigate('/');
+              },
+            })
+          }
+        >
+          Logout
+        </Button>
       </div>
     );
   }
@@ -52,14 +71,7 @@ export function Wrapper({ children }: WrapperProps) {
 
   return (
     <AppShell
-      styles={{
-        main: {
-          background:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-      }}
+      className='bg-gray-100 px-32'
       navbarOffsetBreakpoint='sm'
       asideOffsetBreakpoint='sm'
       navbar={
@@ -69,18 +81,22 @@ export function Wrapper({ children }: WrapperProps) {
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}
         >
-          <Text>Notes</Text>
+          <div className='mx-auto'>
+            <CurrentUser />
+          </div>
         </Navbar>
       }
       aside={
         <MediaQuery smallerThan='sm' styles={{ display: 'none' }}>
           <Aside p='md' hiddenBreakpoint='sm' width={{ sm: 200, lg: 300 }}>
-            <Text>Notes</Text>
+            <div>
+              <UserList />
+            </div>
           </Aside>
         </MediaQuery>
       }
       footer={
-        <Footer height={60} p='md'>
+        <Footer height={60} p='md' className='text-center'>
           Studentský zápočtový projekt – Jan Musil
         </Footer>
       }
@@ -99,14 +115,10 @@ export function Wrapper({ children }: WrapperProps) {
               />
             </MediaQuery>
 
-            <CurrentUser />
-
-            {/* align a login button right */}
-            <div className='ml-auto'>
-              <Button variant='outline' size='md'>
-                Login
-              </Button>
-            </div>
+            <Link to='/' className='flex items-center mx-4'>
+              Microblog
+              <ChatBubbleOvalLeftEllipsisIcon className='h-8 w-8 text-blue-500 m-2' />
+            </Link>
           </div>
         </Header>
       }

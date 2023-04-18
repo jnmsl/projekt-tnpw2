@@ -1,11 +1,11 @@
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
 @modelOptions({
   schemaOptions: {
     timestamps: true,
   },
 })
-class User {
+export class User {
   @prop({
     type: String,
     required: true,

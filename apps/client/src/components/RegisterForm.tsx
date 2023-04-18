@@ -1,11 +1,39 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { trpc } from "../trpc";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { trpc } from '../trpc';
+import {
+  Paper,
+  Col,
+  TextInput,
+  PasswordInput,
+  Button,
+  Grid,
+} from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
 const schema = z.object({
-  username: z.string().nonempty("Username is required."),
-  password: z.string().nonempty("Password is required."),
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters.')
+    .nonempty('Username is required.'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must be at least 8 characters.')
+    .refine(
+      (value) => /[A-Z]/.test(value),
+      'Password must contain an uppercase character.'
+    )
+    .refine(
+      (value) => /[a-z]/.test(value),
+      'Password must contain a lowercase character.'
+    )
+    .refine((value) => /[0-9]/.test(value), 'Password must contain a number.')
+    .refine(
+      (value) => /[^A-Za-z0-9]/.test(value),
+      'Password must contain a special character.'
+    ),
 });
 
 export function RegisterForm() {
@@ -20,39 +48,45 @@ export function RegisterForm() {
 
   const registerUser = trpc.user.register.useMutation();
 
-  const onSubmit = (formData: any) => {
-    console.log(formData); // log the form data before sending it to the server
-    registerUser.mutate(formData, {
-      onSuccess: () => {
-        alert("User registered successfully.");
-        reset();
-      },
-      onError: (error: any) => {
-        alert(error.message);
-      },
-    });
+  const navigate = useNavigate();
+
+  const onSubmit = async (formData: any) => {
+    try {
+      await registerUser.mutateAsync(formData);
+      console.log('User registered successfully.');
+      navigate('/login');
+      reset();
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-zinc-900 p-10 rounded-md">
-      <input
-        type="text"
-        placeholder="Username"
-        {...register("username")}
-        autoFocus
-        className="bg-neutral-800 px-3 py-2 block w-full rounded-md mb-3"
-      />
-      {/* {errors.username && <p className="text-red-500">{errors.username.message}</p>} */}
-
-      <input
-        type="password"
-        placeholder="Password"
-        {...register("password")}
-        className="bg-neutral-800 px-3 py-2 block w-full rounded-md mb-3"
-      />
-      {/* {errors.password && <p className="text-red-500">{errors.password.message}</p>} */}
-
-      <button className="bg-zinc-500 px-3 py-2 rounded-md text-white">Register</button>
-    </form>
+    <Paper p='md' shadow='xs'>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid gutter='md'>
+          <Col span={12}>
+            <TextInput
+              label='Username'
+              error={errors.username?.message as string | undefined}
+              {...register('username')}
+              autoFocus
+            />
+          </Col>
+          <Col span={12}>
+            <PasswordInput
+              label='Password'
+              error={errors.password?.message as string | undefined}
+              {...register('password')}
+            />
+          </Col>
+          <Col span={12}>
+            <Button type='submit' variant='filled' size='sm'>
+              Register
+            </Button>
+          </Col>
+        </Grid>
+      </form>
+    </Paper>
   );
 }

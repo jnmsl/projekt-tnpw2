@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { trpc } from "./trpc";
-import { httpBatchLink } from "@trpc/client";
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { trpc } from './trpc';
+import { httpBatchLink } from '@trpc/client';
+import { MantineProvider, createEmotionCache } from '@mantine/core';
 
 function App({ children }: React.PropsWithChildren<{}>) {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,9 +22,16 @@ function App({ children }: React.PropsWithChildren<{}>) {
     })
   );
 
+  const myCache = createEmotionCache({
+    key: 'mantine',
+    prepend: false,
+  });
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <MantineProvider emotionCache={myCache}>{children}</MantineProvider>
+      </QueryClientProvider>
     </trpc.Provider>
   );
 }
