@@ -1,5 +1,6 @@
 services:
   - type: web
+    region: frankfurt
     name: server
     env: node
     rootDir: apps/server
@@ -9,10 +10,11 @@ services:
       - key: NODE_ENV
         value: production
   - type: web
+    region: frankfurt
     name: client
     buildCommand: yarn build
     rootDir: apps/client
-    publishDir: apps/client/dist
+    staticPublishPath: apps/client/dist
     envVars:
       - key: NODE_ENV
         value: production
