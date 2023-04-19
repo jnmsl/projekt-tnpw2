@@ -12,6 +12,7 @@ services:
   - type: web
     region: frankfurt
     name: client
+    env: static
     buildCommand: yarn build
     rootDir: apps/client
     staticPublishPath: apps/client/dist
