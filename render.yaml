@@ -8,9 +8,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-
-staticSites:
-  - name: client
+  - type: web
+    name: client
     buildCommand: yarn build
     rootDir: apps/client
     publishDir: apps/client/dist
