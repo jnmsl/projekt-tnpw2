@@ -1,6 +1,7 @@
 services:
   - type: web
     region: frankfurt
+    plan: free
     name: server
     env: node
     rootDir: apps/server
@@ -11,6 +12,7 @@ services:
         value: production
   - type: web
     name: client
+    plan: free
     env: static
     buildCommand: yarn build
     rootDir: apps/client
