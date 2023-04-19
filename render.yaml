@@ -5,15 +5,15 @@ services:
     name: server
     env: node
     rootDir: apps/server
-    buildCommand: yarn build
-    startCommand: yarn start
+    buildCommand: pnpm build
+    startCommand: pnpm start
     envVars:
       - key: NODE_ENV
         value: production
   - type: web
     name: client
     env: static
-    buildCommand: yarn build
+    buildCommand: pnpm build
     rootDir: apps/client
     staticPublishPath: apps/client/dist
     envVars:
