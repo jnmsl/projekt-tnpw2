@@ -12,7 +12,6 @@ services:
         value: production
   - type: web
     name: client
-    plan: free
     env: static
     buildCommand: yarn build
     rootDir: apps/client
