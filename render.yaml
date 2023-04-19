@@ -4,6 +4,7 @@ services:
     plan: free
     name: server
     env: node
+    nodeVersion: lts
     rootDir: apps/server
     buildCommand: pnpm install --frozen-lockfile && pnpm build
     startCommand: pnpm start
