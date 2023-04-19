@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: client
+    env: node
+    rootDir: apps/client
+    buildCommand: yarn build
+    startCommand: yarn preview
+    staticPublishPath: apps/client/dist
+    routes:
+      - type: rewrite
+        source: /.*
+        destination: /index.html
+
+  - type: web
+    name: server
+    env: node
+    rootDir: apps/server
+    buildCommand: yarn build
+    startCommand: yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
