@@ -10,7 +10,6 @@ services:
       - key: NODE_ENV
         value: production
   - type: web
-    region: frankfurt
     name: client
     env: static
     buildCommand: yarn build
