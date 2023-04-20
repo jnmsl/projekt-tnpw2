@@ -14,7 +14,7 @@ services:
   - type: web
     name: client
     env: static
-    buildCommand: pnpm
+    buildCommand: npm run build
     rootDir: apps/client
     staticPublishPath: dist
     envVars:
